@@ -1,14 +1,24 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+
 .scene {
-  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
   background: #0a0a0a;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+
   overflow: hidden;
   font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+
+  margin: 0;
+  padding: 0;
 }
 
 #dotCanvas {
@@ -22,7 +32,7 @@
 .card {
   position: relative;
   z-index: 10;
-  width: 380px;
+  width: 420px;
   padding: 40px 36px;
   background: rgba(255, 255, 255, 0.04);
   border: 0.5px solid rgba(255, 255, 255, 0.12);
@@ -171,8 +181,13 @@
 }
 
 /* ── Staggered check entry ── */
-.chk:nth-child(1) { transition-delay: 0ms; }
-.chk:nth-child(2) { transition-delay: 30ms; }
-.chk:nth-child(3) { transition-delay: 60ms; }
-.chk:nth-child(4) { transition-delay: 90ms; }
-.chk:nth-child(5) { transition-delay: 120ms; }
+.chk:nth-child(1)  { transition-delay: 0ms; }
+.chk:nth-child(2)  { transition-delay: 30ms; }
+.chk:nth-child(3)  { transition-delay: 60ms; }
+.chk:nth-child(4)  { transition-delay: 90ms; }
+.chk:nth-child(5)  { transition-delay: 120ms; }
+.chk:nth-child(6)  { transition-delay: 150ms; }
+.chk:nth-child(7)  { transition-delay: 180ms; }
+.chk:nth-child(8)  { transition-delay: 210ms; }
+.chk:nth-child(9)  { transition-delay: 240ms; }
+.chk:nth-child(10) { transition-delay: 270ms; }
