@@ -1,16 +1,28 @@
 {
   "name": "angular11-password-checker",
   "version": "0.0.0",
+  "overrides": {
+    "webpack": "$webpack"
+  },
   "scripts": {
     "ng": "ng",
     "start": "set NODE_OPTIONS=--openssl-legacy-provider && ng serve",
+    "start:host": "set NODE_OPTIONS=--openssl-legacy-provider && ng serve angular11-password-checker --port 4200",
+    "start:login": "set NODE_OPTIONS=--openssl-legacy-provider && ng serve login-remote --port 4201",
+    "start:signup": "set NODE_OPTIONS=--openssl-legacy-provider && ng serve signup-remote --port 4202",
+    "start:api": "node backend/server.js",
+    "start:all": "concurrently \"npm run start:api\" \"npm run start:host\" \"npm run start:login\" \"npm run start:signup\"",
     "build": "set NODE_OPTIONS=--openssl-legacy-provider && ng build",
+    "build:host": "set NODE_OPTIONS=--openssl-legacy-provider && ng build angular11-password-checker",
+    "build:login": "set NODE_OPTIONS=--openssl-legacy-provider && ng build login-remote",
+    "build:signup": "set NODE_OPTIONS=--openssl-legacy-provider && ng build signup-remote",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
+    "@angular-architects/module-federation": "12.0.0-beta.1",
     "@angular/animations": "~11.2.14",
     "@angular/common": "~11.2.14",
     "@angular/compiler": "~11.2.14",
@@ -19,6 +31,13 @@
     "@angular/platform-browser": "~11.2.14",
     "@angular/platform-browser-dynamic": "~11.2.14",
     "@angular/router": "~11.2.14",
+    "bcryptjs": "^3.0.3",
+    "concurrently": "^9.2.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.7.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.3"
@@ -40,6 +59,7 @@
     "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
-    "typescript": "~4.1.5"
+    "typescript": "~4.1.5",
+    "webpack": "~5.24.4"
   }
 }

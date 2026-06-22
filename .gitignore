@@ -46,3 +46,7 @@ testem.log
 Thumbs.db
 
 .vercel
+
+# database & environment config
+.env
+backend/database.json

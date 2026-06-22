@@ -1,13 +1,159 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   password = '';
   showPassword = false;
+  
+  currentUser: { name: string; email: string } | null = null;
+  token: string | null = null;
+  savedHistory: any[] = [];
+  
+  isSaving = false;
+  saveSuccess = false;
+  saveError = '';
+  private storageListener: any;
+
+  constructor(
+    private readonly http: HttpClient,
+    private readonly router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.checkAuthStatus();
+    
+    // Listen for storage events (e.g. login/logout from remote MFEs)
+    this.storageListener = () => {
+      this.checkAuthStatus();
+    };
+    window.addEventListener('storage', this.storageListener);
+    
+    // Also listen to custom storage events triggered programmatically
+    window.addEventListener('storage-update', this.storageListener);
+  }
+
+  ngOnDestroy(): void {
+    if (this.storageListener) {
+      window.removeEventListener('storage', this.storageListener);
+      window.removeEventListener('storage-update', this.storageListener);
+    }
+  }
+
+  checkAuthStatus(): void {
+    const userJson = localStorage.getItem('user');
+    const tokenStr = localStorage.getItem('token');
+    
+    if (userJson && tokenStr) {
+      this.currentUser = JSON.parse(userJson);
+      this.token = tokenStr;
+      this.loadHistory();
+    } else {
+      this.currentUser = null;
+      this.token = null;
+      this.savedHistory = [];
+    }
+  }
+
+  loadHistory(): void {
+    if (!this.token) return;
+    
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+
+    this.http.get<any[]>('http://localhost:5000/api/passwords/history', { headers })
+      .subscribe(
+        (data) => {
+          this.savedHistory = data;
+        },
+        (error) => {
+          console.error('Error loading history:', error);
+          if (error.status === 401 || error.status === 403) {
+            // Token expired or invalid
+            this.logout();
+          }
+        }
+      );
+  }
+
+  savePassword(): void {
+    if (!this.token || !this.password || this.isSaving) return;
+
+    this.isSaving = true;
+    this.saveSuccess = false;
+    this.saveError = '';
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const body = {
+      password: this.password,
+      score: this.score,
+      strength: this.strengthLabel,
+      checks: this.checks.map(c => ({
+        label: c.label,
+        passed: c.test(this.password)
+      }))
+    };
+
+    this.http.post<any>('http://localhost:5000/api/passwords/save', body, { headers })
+      .subscribe(
+        (res) => {
+          this.isSaving = false;
+          this.saveSuccess = true;
+          // Add newly saved record to the top of the history list
+          this.savedHistory.unshift(res.record);
+          setTimeout(() => this.saveSuccess = false, 3000);
+        },
+        (error) => {
+          this.isSaving = false;
+          console.error('Error saving password:', error);
+          this.saveError = error.error?.error || 'Failed to save password.';
+          setTimeout(() => this.saveError = '', 4000);
+        }
+      );
+  }
+
+  logout(): void {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    this.checkAuthStatus();
+    // Dispatch event to update ShellComponent navigation
+    window.dispatchEvent(new Event('storage'));
+    this.router.navigate(['/login']);
+  }
+
+  deletePassword(id: string): void {
+    if (!this.token || !id) return;
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+
+    this.http.delete(`http://localhost:5000/api/passwords/${id}`, { headers })
+      .subscribe(
+        () => {
+          const item = this.savedHistory.find(i => (i.id || i._id) === id);
+          if (item) {
+            item.isDeleting = true;
+          }
+          setTimeout(() => {
+            this.savedHistory = this.savedHistory.filter(i => (i.id || i._id) !== id);
+          }, 300);
+        },
+        (error) => {
+          console.error('Error deleting password:', error);
+        }
+      );
+  }
 
   readonly checks = [
   { label: '8+ characters',                  test: (p: string) => p.length >= 8 },

@@ -2,31 +2,254 @@
 
 
 .scene {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  background: #0a0a0a;
-
+  min-height: 100vh;
+  width: 100%;
+  background: transparent;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 110px 20px 40px;
+  overflow-y: auto;
+  font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+  margin: 0;
+}
+
+.app-layout {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  max-width: 920px;
+  z-index: 10;
+}
+
+/* ── DB Actions ── */
+.db-actions {
+  margin-top: -12px;
+  margin-bottom: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.save-btn {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.save-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.save-btn:disabled {
+  background: rgba(48, 209, 88, 0.15);
+  border-color: rgba(48, 209, 88, 0.3);
+  color: #30d158;
+  cursor: not-allowed;
+}
+
+.login-tip {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+}
+
+.login-tip a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.save-error {
+  font-size: 11px;
+  color: #ff3b30;
+  text-align: center;
+  margin-top: 4px;
+}
+
+/* ── History Card ── */
+.history-card {
+  width: 440px;
+  padding: 40px 36px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 0.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  max-height: 520px;
+  display: flex;
+  flex-direction: column;
+}
+
+.history-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.4px;
+  margin-bottom: 4px;
+}
+
+.history-sub {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.35);
+  margin-bottom: 24px;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Custom Scrollbar for history list */
+.history-list::-webkit-scrollbar {
+  width: 5px;
+}
+.history-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+}
+.history-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.history-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 120px;
+  opacity: 1;
+  overflow: hidden;
+}
+
+.history-item.deleting {
+  opacity: 0;
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: -7px;
+  margin-bottom: -7px;
+  border-color: transparent;
+  pointer-events: none;
+}
+
+.history-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.history-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.history-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.history-pw {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  word-break: break-all;
+  font-family: monospace;
+}
+
+.history-strength {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  align-self: flex-start;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.history-strength[data-strength="Strong"] {
+  background: rgba(48, 209, 88, 0.15);
+  color: #30d158;
+}
+.history-strength[data-strength="Medium"] {
+  background: rgba(255, 204, 0, 0.15);
+  color: #ffcc00;
+}
+.history-strength[data-strength="Weak"] {
+  background: rgba(255, 59, 48, 0.15);
+  color: #ff3b30;
+}
+
+.history-date {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  white-space: nowrap;
+}
+
+.history-indicators {
+  display: flex;
+  gap: 5px;
+}
+
+.indicator-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.indicator-dot.pass {
+  background: #30d158;
+}
+
+.no-history-state {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  overflow: hidden;
-  font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
-
-  margin: 0;
-  padding: 0;
+  text-align: center;
+  padding: 40px 20px;
+  color: rgba(255, 255, 255, 0.3);
+  gap: 12px;
+  flex: 1;
 }
 
-#dotCanvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+.no-history-state p {
+  font-size: 13px;
+  line-height: 1.5;
 }
+
+@media (max-width: 920px) {
+  .app-layout {
+    flex-direction: column;
+    align-items: center;
+    max-width: 420px;
+  }
+  .card, .history-card {
+    width: 100%;
+  }
+}
+
+
 
 /* ── Card ── */
 .card {
@@ -191,3 +414,32 @@
 .chk:nth-child(8)  { transition-delay: 210ms; }
 .chk:nth-child(9)  { transition-delay: 240ms; }
 .chk:nth-child(10) { transition-delay: 270ms; }
+
+.history-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.delete-history-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.delete-history-btn:hover {
+  color: #ff453a;
+  background: rgba(255, 69, 58, 0.12);
+}
+
+.delete-history-btn:active {
+  transform: scale(0.92);
+}

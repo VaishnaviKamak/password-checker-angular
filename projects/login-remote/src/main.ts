@@ -1,4 +1,2 @@
-import '@angular/compiler';
-
 import('./bootstrap')
 	.catch(err => console.error(err));

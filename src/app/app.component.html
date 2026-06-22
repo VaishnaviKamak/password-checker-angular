@@ -1,7 +1,6 @@
 <div class="scene">
-  <canvas #dotCanvas id="dotCanvas"></canvas>
-
-  <div class="card">
+  <div class="app-layout">
+    <div class="card">
     <h1 class="card-title">Password</h1>
     <p class="card-sub">Secure your account</p>
 
@@ -41,6 +40,24 @@
       ></div>
     </div>
 
+    <!-- DB Save Operations -->
+    <div class="db-actions" *ngIf="password">
+      <button 
+        *ngIf="currentUser" 
+        class="save-btn" 
+        [disabled]="isSaving || saveSuccess"
+        (click)="savePassword()"
+      >
+        <span *ngIf="!isSaving && !saveSuccess">Save to Database</span>
+        <span *ngIf="isSaving">Saving to Database...</span>
+        <span *ngIf="saveSuccess">✓ Password Saved!</span>
+      </button>
+      <div *ngIf="!currentUser" class="login-tip">
+        <span>💡 <a href="http://localhost:4200/login">Sign in</a> to save password evaluation histories.</span>
+      </div>
+      <p class="save-error" *ngIf="saveError">{{ saveError }}</p>
+    </div>
+
     <div class="checklist">
       <div
         class="chk"
@@ -52,5 +69,53 @@
         <span class="chk-label">{{ c.label }}</span>
       </div>
     </div>
+  </div>
+
+  <!-- DB History Dashboard -->
+  <div class="history-card" *ngIf="currentUser">
+    <h2 class="history-title">Saved Evaluations</h2>
+    <p class="history-sub">Your personal secure check history</p>
+
+    <div class="history-list" *ngIf="savedHistory.length > 0; else noHistory">
+      <div class="history-item" *ngFor="let item of savedHistory" [class.deleting]="item.isDeleting">
+        <div class="history-main">
+          <div class="history-meta">
+            <span class="history-pw">{{ item.password }}</span>
+            <span class="history-strength" [attr.data-strength]="item.strength">{{ item.strength }}</span>
+          </div>
+          <div class="history-right">
+            <span class="history-date">{{ item.timestamp | date:'MMM d, y, h:mm a' }}</span>
+            <button class="delete-history-btn" (click)="deletePassword(item.id || item._id)" aria-label="Delete evaluation">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div class="history-indicators" *ngIf="item.checks">
+          <span 
+            class="indicator-dot" 
+            *ngFor="let chk of item.checks" 
+            [class.pass]="chk.passed"
+            [title]="chk.label"
+          ></span>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noHistory>
+      <div class="no-history-state">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <p>No evaluations saved to this account yet. Verify a password and click "Save to Database".</p>
+      </div>
+    </ng-template>
+  </div>
   </div>
 </div>

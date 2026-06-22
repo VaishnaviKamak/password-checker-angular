@@ -1,0 +1,21 @@
+<canvas #dotCanvas id="dotCanvas"></canvas>
+
+<header class="shell-header">
+  <a class="brand" [routerLink]="currentUser ? '/password' : '/welcome'" aria-label="Password checker home">
+    <span class="brand-mark">P</span>
+    <span>Password Lab</span>
+  </a>
+
+  <nav class="shell-nav" aria-label="Main navigation">
+    <a *ngIf="currentUser" routerLink="/password" routerLinkActive="active">Checker</a>
+    
+    <ng-container *ngIf="currentUser">
+      <span class="user-greeting">Welcome, <strong>{{ currentUser.name }}</strong></span>
+      <button class="logout-btn" (click)="logout()">Logout</button>
+    </ng-container>
+  </nav>
+</header>
+
+<main class="shell-content">
+  <router-outlet></router-outlet>
+</main>

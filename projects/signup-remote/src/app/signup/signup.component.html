@@ -1,0 +1,74 @@
+<section class="auth-page">
+  <div class="glow glow-one"></div>
+  <div class="glow glow-two"></div>
+  <form class="auth-card" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="eyebrow">GET STARTED</div>
+    <h1>Create account</h1>
+    <p class="intro">Build safer password habits from day one.</p>
+
+    <div class="alert-error" *ngIf="signupError">
+      {{ signupError }}
+    </div>
+
+    <div class="alert-success" *ngIf="signupSuccess">
+      ✓ Registration successful! Redirecting to sign in...
+    </div>
+
+    <div class="field-grid">
+      <div>
+        <label for="signup-name">Full name</label>
+        <input id="signup-name" type="text" formControlName="name" autocomplete="name" placeholder="Your name" />
+        <p class="error" *ngIf="showError('name')">
+          <span *ngIf="form.get('name')?.errors?.required">Name is required.</span>
+          <span *ngIf="form.get('name')?.errors?.minlength">Use at least 2 characters.</span>
+        </p>
+      </div>
+      <div>
+        <label for="signup-email">Email address</label>
+        <input id="signup-email" type="email" formControlName="email" autocomplete="email" placeholder="name@example.com" />
+        <p class="error" *ngIf="showError('email')">
+          <span *ngIf="form.get('email')?.errors?.required">Email is required.</span>
+          <span *ngIf="form.get('email')?.errors?.email">Enter a valid email address.</span>
+        </p>
+      </div>
+    </div>
+
+    <label for="signup-password">Password</label>
+    <div class="password-field">
+      <input id="signup-password" [type]="showPassword ? 'text' : 'password'" formControlName="password" autocomplete="new-password" placeholder="Create a strong password" />
+      <button type="button" class="reveal" (click)="showPassword = !showPassword" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+        <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+        </svg>
+        <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+          <line x1="1" y1="1" x2="23" y2="23"/>
+        </svg>
+      </button>
+    </div>
+    <p class="error" *ngIf="showError('password')">
+      <span *ngIf="form.get('password')?.errors?.required">Password is required.</span>
+      <span *ngIf="form.get('password')?.errors?.minlength">Use at least 8 characters.</span>
+    </p>
+
+    <div class="strength" *ngIf="form.get('password')?.value">
+      <div class="strength-copy"><span>Password strength</span><strong [attr.data-strength]="passwordStrength">{{ passwordStrength }}</strong></div>
+      <div class="strength-track"><span [attr.data-strength]="passwordStrength" [style.width]="strengthWidth"></span></div>
+      <p class="hint">Mix uppercase, lowercase, numbers, and symbols.</p>
+    </div>
+
+    <label for="signup-confirm">Confirm password</label>
+    <input id="signup-confirm" type="password" formControlName="confirmPassword" autocomplete="new-password" placeholder="Repeat your password" />
+    <p class="error" *ngIf="showError('confirmPassword') || showMismatch">
+      <span *ngIf="form.get('confirmPassword')?.errors?.required">Please confirm your password.</span>
+      <span *ngIf="showMismatch">Passwords do not match.</span>
+    </p>
+
+    <button class="primary" type="submit" [disabled]="isLoading || signupSuccess">
+      <span *ngIf="!isLoading && !signupSuccess">Create secure account</span>
+      <span *ngIf="isLoading">Creating account...</span>
+      <span *ngIf="signupSuccess">✓ Account Created!</span>
+    </button>
+    <p class="switch">Already registered? <a routerLink="/login">Sign in</a></p>
+  </form>
+</section>
