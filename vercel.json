@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "export NODE_OPTIONS=--openssl-legacy-provider && npx ng build angular11-password-checker && npx ng build login-remote && npx ng build signup-remote",
+  "buildCommand": "export NODE_OPTIONS=--openssl-legacy-provider && npx ng build angular11-password-checker --prod && npx ng build login-remote --prod && npx ng build signup-remote --prod",
   "outputDirectory": "dist",
   "env": {
     "NODE_OPTIONS": "--openssl-legacy-provider"
