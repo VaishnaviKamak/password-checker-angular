@@ -5,15 +5,26 @@ const path = require('path');
 const MONGODB_URI = process.env.MONGODB_URI;
 const isMongo = !!MONGODB_URI;
 
-if (isMongo) {
-  console.log('Connecting to MongoDB database...');
-  mongoose.connect(MONGODB_URI).then(() => {
-    console.log('✓ Successfully connected to MongoDB Database!');
-  }).catch((err) => {
-    console.error('✗ MongoDB database connection error:', err);
-  });
-} else {
-  console.log('Using local JSON file database fallback (backend/database.json).');
+let connectionPromise = null;
+
+async function ensureConnection() {
+  if (!isMongo) return;
+
+  // If already connected, return immediately
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
+
+  // If not connecting yet, initiate connection
+  if (mongoose.connection.readyState !== 2) {
+    console.log('Connecting to MongoDB database (lazy/serverless)...');
+    connectionPromise = mongoose.connect(MONGODB_URI, {
+      bufferCommands: false // Fail fast instead of hanging in serverless if connection fails
+    });
+  }
+
+  // Await the active connection promise to complete
+  await connectionPromise;
 }
 
 // ── MongoDB Schemas & Models ──
@@ -73,6 +84,7 @@ function writeData(data) {
 // Find user by email
 async function findUserByEmail(email) {
   if (isMongo) {
+    await ensureConnection();
     return await MongoUser.findOne({ email: email.toLowerCase() });
   } else {
     const data = readData();
@@ -83,6 +95,7 @@ async function findUserByEmail(email) {
 // Save a new user
 async function saveUser(user) {
   if (isMongo) {
+    await ensureConnection();
     const newUser = new MongoUser({
       name: user.name,
       email: user.email.toLowerCase(),
@@ -101,6 +114,7 @@ async function saveUser(user) {
 // Get password history for a user
 async function getPasswordHistory(email) {
   if (isMongo) {
+    await ensureConnection();
     return await MongoPassword.find({ email: email.toLowerCase() }).sort({ timestamp: -1 });
   } else {
     const data = readData();
@@ -111,6 +125,7 @@ async function getPasswordHistory(email) {
 // Save a password check to history
 async function savePasswordCheck(email, passwordRecord) {
   if (isMongo) {
+    await ensureConnection();
     const newRecord = new MongoPassword({
       email: email.toLowerCase(),
       password: passwordRecord.password,
@@ -137,6 +152,7 @@ async function savePasswordCheck(email, passwordRecord) {
 // Delete a password check by email and ID
 async function deletePasswordCheck(email, id) {
   if (isMongo) {
+    await ensureConnection();
     await MongoPassword.deleteOne({ _id: id, email: email.toLowerCase() });
   } else {
     const data = readData();
