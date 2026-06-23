@@ -10,10 +10,7 @@ module.exports = {
   plugins: [
     new ModuleFederationPlugin({
       // Remote containers are served independently and consumed by shell routes.
-      remotes: {
-        loginRemote: "loginRemote@https://password-checker-angular-alpha.vercel.app/login/remoteEntry.js",
-        signupRemote: "signupRemote@https://password-checker-angular-alpha.vercel.app/signup/remoteEntry.js"
-      },
+      remotes: {},
       shared: {
         "@angular/core": { singleton: true, strictVersion: true, requiredVersion: "11.2.14" },
         "@angular/common": { singleton: true, strictVersion: true, requiredVersion: "11.2.14" },

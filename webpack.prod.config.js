@@ -7,10 +7,7 @@ const mfPluginIndex = baseConfig.plugins.findIndex(
 
 if (mfPluginIndex !== -1) {
   baseConfig.plugins[mfPluginIndex] = new ModuleFederationPlugin({
-    remotes: {
-      loginRemote: "loginRemote@/login-remote/remoteEntry.js",
-      signupRemote: "signupRemote@/signup-remote/remoteEntry.js"
-    },
+    remotes: {},
     shared: {
       "@angular/core": { singleton: true, strictVersion: true, requiredVersion: "11.2.14" },
       "@angular/common": { singleton: true, strictVersion: true, requiredVersion: "11.2.14" },
