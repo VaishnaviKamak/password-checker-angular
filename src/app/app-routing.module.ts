@@ -10,12 +10,12 @@ import { environment } from 'src/environments/environment';
 const isProduction = environment.production;
 
 const loginRemoteEntry = isProduction
-  ? '/login-remote/remoteEntry.js'
-  : 'https://password-checker-angular-alpha.vercel.app/login-remote/remoteEntry.js';
+  ? `${window.location.origin}/login-remote/remoteEntry.js`
+  : 'http://localhost:4201/remoteEntry.js';
 
 const signupRemoteEntry = isProduction
-  ? '/signup-remote/remoteEntry.js'
-  : 'https://password-checker-angular-alpha.vercel.app/signup-remote/remoteEntry.js';
+  ? `${window.location.origin}/signup-remote/remoteEntry.js`
+  : 'http://localhost:4202/remoteEntry.js';
 
 const routes: Routes = [
   { path: 'welcome', component: WelcomeComponent },
