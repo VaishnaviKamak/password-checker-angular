@@ -11,11 +11,11 @@ const isProduction = environment.production;
 
 const loginRemoteEntry = isProduction
   ? '/login-remote/remoteEntry.js'
-  : 'http://localhost:4201/remoteEntry.js';
+  : 'https://password-checker-angular-alpha.vercel.app/login-remote/remoteEntry.js';
 
 const signupRemoteEntry = isProduction
   ? '/signup-remote/remoteEntry.js'
-  : 'http://localhost:4202/remoteEntry.js';
+  : 'https://password-checker-angular-alpha.vercel.app/signup-remote/remoteEntry.js';
 
 const routes: Routes = [
   { path: 'welcome', component: WelcomeComponent },
@@ -46,4 +46,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
