@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "buildCommand": "export NODE_OPTIONS=--openssl-legacy-provider && npx ng build angular11-password-checker && npx ng build login-remote && npx ng build signup-remote",
+  "outputDirectory": "dist",
+  "env": {
+    "NODE_OPTIONS": "--openssl-legacy-provider"
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/login-remote/(.*)",
+      "dest": "/login-remote/$1"
+    },
+    {
+      "src": "/signup-remote/(.*)",
+      "dest": "/signup-remote/$1"
+    },
+    {
+      "src": "/(.*\\.(js|css|ico|png|jpg|svg|map|txt|json))",
+      "dest": "/angular11-password-checker/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/angular11-password-checker/index.html"
+    }
+  ]
+}

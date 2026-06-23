@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 type Strength = 'Weak' | 'Medium' | 'Strong';
 
@@ -59,7 +60,7 @@ export class LoginComponent {
     this.isLoading = true;
     const credentials = this.form.value;
 
-    this.http.post<any>('http://localhost:5000/api/auth/login', credentials)
+    this.http.post<any>(`${environment.apiUrl}/api/auth/login`, credentials)
       .subscribe(
         (res) => {
           this.isLoading = false;

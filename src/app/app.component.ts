@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -67,7 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
       'Authorization': `Bearer ${this.token}`
     });
 
-    this.http.get<any[]>('http://localhost:5000/api/passwords/history', { headers })
+    this.http.get<any[]>(`${environment.apiUrl}/api/passwords/history`, { headers })
       .subscribe(
         (data) => {
           this.savedHistory = data;
@@ -104,7 +105,7 @@ export class AppComponent implements OnInit, OnDestroy {
       }))
     };
 
-    this.http.post<any>('http://localhost:5000/api/passwords/save', body, { headers })
+    this.http.post<any>(`${environment.apiUrl}/api/passwords/save`, body, { headers })
       .subscribe(
         (res) => {
           this.isSaving = false;
@@ -138,7 +139,7 @@ export class AppComponent implements OnInit, OnDestroy {
       'Authorization': `Bearer ${this.token}`
     });
 
-    this.http.delete(`http://localhost:5000/api/passwords/${id}`, { headers })
+    this.http.delete(`${environment.apiUrl}/api/passwords/${id}`, { headers })
       .subscribe(
         () => {
           const item = this.savedHistory.find(i => (i.id || i._id) === id);

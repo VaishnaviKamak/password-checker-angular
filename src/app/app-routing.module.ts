@@ -5,15 +5,26 @@ import { AppComponent } from './app.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { AuthGuard } from './guards/auth.guard';
 
+import { environment } from 'src/environments/environment';
+
+const isProduction = environment.production;
+
+const loginRemoteEntry = isProduction
+  ? '/login-remote/remoteEntry.js'
+  : 'http://localhost:4201/remoteEntry.js';
+
+const signupRemoteEntry = isProduction
+  ? '/signup-remote/remoteEntry.js'
+  : 'http://localhost:4202/remoteEntry.js';
+
 const routes: Routes = [
   { path: 'welcome', component: WelcomeComponent },
   { path: 'password', component: AppComponent, canActivate: [AuthGuard] },
-  // URLs stay runtime-configurable through each remoteEntry declaration.
   {
     path: 'login',
     loadChildren: () =>
       loadRemoteModule({
-        remoteEntry: 'http://localhost:4201/remoteEntry.js',
+        remoteEntry: loginRemoteEntry,
         remoteName: 'loginRemote',
         exposedModule: './LoginModule'
       }).then(remote => remote.LoginModule)
@@ -22,7 +33,7 @@ const routes: Routes = [
     path: 'signup',
     loadChildren: () =>
       loadRemoteModule({
-        remoteEntry: 'http://localhost:4202/remoteEntry.js',
+        remoteEntry: signupRemoteEntry,
         remoteName: 'signupRemote',
         exposedModule: './SignupModule'
       }).then(remote => remote.SignupModule)

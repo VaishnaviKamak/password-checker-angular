@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 type Strength = 'Weak' | 'Medium' | 'Strong';
 
@@ -74,7 +75,7 @@ export class SignupComponent {
     this.isLoading = true;
     const { name, email, password } = this.form.value;
 
-    this.http.post<any>('http://localhost:5000/api/auth/signup', { name, email, password })
+    this.http.post<any>(`${environment.apiUrl}/api/auth/signup`, { name, email, password })
       .subscribe(
         (res) => {
           this.isLoading = false;

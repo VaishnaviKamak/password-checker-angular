@@ -11,7 +11,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'password-checker-secret-key-12345'
 
 // Enable CORS for Host (4200) and Remotes (4201, 4202)
 app.use(cors({
-  origin: ['http://localhost:4200', 'http://localhost:4201', 'http://localhost:4202'],
+  origin: ['https://password-checker-angular-alpha.vercel.app', 'http://localhost:4200', 'http://localhost:4201', 'http://localhost:4202'],
   credentials: true
 }));
 
@@ -156,7 +156,7 @@ app.post('/api/passwords/save', authenticateToken, async (req, res) => {
 app.get('/api/passwords/history', authenticateToken, async (req, res) => {
   try {
     const history = await db.getPasswordHistory(req.user.email);
-    
+
     // Sort by timestamp descending (newest first)
     // Note: Mongoose might return document objects, we make sure we copy or handle sort
     const sortedHistory = Array.from(history).sort((a, b) => new Date(b.timestamp || b.createdAt) - new Date(a.timestamp || a.createdAt));
@@ -185,6 +185,10 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', database: 'Hybrid (Mongoose/JSON)' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Password Checker Backend API running on http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Password Checker Backend API running on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;

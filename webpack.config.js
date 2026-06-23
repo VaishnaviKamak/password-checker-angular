@@ -6,13 +6,13 @@ module.exports = {
   },
   optimization: {
     runtimeChunk: false
-  },   
+  },
   plugins: [
     new ModuleFederationPlugin({
       // Remote containers are served independently and consumed by shell routes.
       remotes: {
-        loginRemote: "loginRemote@http://localhost:4201/remoteEntry.js",
-        signupRemote: "signupRemote@http://localhost:4202/remoteEntry.js"
+        loginRemote: "loginRemote@https://password-checker-angular-alpha.vercel.app/login/remoteEntry.js",
+        signupRemote: "signupRemote@https://password-checker-angular-alpha.vercel.app/signup/remoteEntry.js"
       },
       shared: {
         "@angular/core": { singleton: true, strictVersion: true, requiredVersion: "11.2.14" },
